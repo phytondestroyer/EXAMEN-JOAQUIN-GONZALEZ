@@ -1,0 +1,116 @@
+from datetime import datetime
+def mostrar_ganacias(departamento):
+    print()
+    contador = [0,0,0,0]
+    for piso in departamento:
+        if piso[0][0]== "X":
+            contador[0] = contador[0] + 1            
+        if piso[1][0]== "X":
+            contador[1] = contador[1] + 1
+        if piso[2][0]== "X":
+            contador[2] = contador[2] + 1
+        if piso[3][0]== "X":
+            contador[3] = contador[3] + 1
+    print("|tipo de Depatamento|Cantidad|")
+    print("|tipo A             |  "+str(contador[0])+"     |"+str(contador[0]*3800)+" UF")
+    print("|tipo B             |  "+str(contador[1])+"     |"+str(contador[1]*3000)+" UF")
+    print("|tipo C             |  "+str(contador[2])+"     |"+str(contador[2]*2800)+" UF")
+    print("|tipo D             |  "+str(contador[3])+"     |"+str(contador[3]*3500)+" UF")
+    print("|Total              |        |"+str(contador[0]*3800+contador[1]*3000+contador[2]*2800+contador[3]*3500)+" UF")
+
+
+def mostrar_compradores(departamento):
+    print()
+    compradores = []
+    for piso in departamento:
+        for depa in piso:
+            if depa[0] == "X":
+                compradores.append(depa[2])
+    compradores.sort()
+    for comprador in compradores:
+        print(comprador)
+
+
+def mostrar_disponibles(departamento):
+    print()
+    print("|piso|  Tipo |")
+    print("|    |A|B|C|D|")
+    for piso in range(0,10):
+        if piso == 0:
+            print("| "+str(10-piso)+" |", end="")
+        else:
+            print("| "+str(10-piso)+"  |", end="")
+        for depa in range(0,4):
+            print(departamento[10-piso-1][depa][0]+"|", end="")
+        print("\n",end="")
+
+
+def comprar(departamento):
+    print()
+    opcion_valida = False
+    diccionario = {"A":0,"B":1,"C":2,"D":3}
+    mostrar_disponibles(departamento)
+    while not opcion_valida:
+        opcion = input("ingrese el departamento a comprar \n")
+        try:
+            numero = int(opcion[1:])
+            letra  = opcion[0].capitalize()
+            if 0 < numero and numero <= 10 and letra in "ABCD":
+                 opcion_valida = True
+        except:
+            print("opcion no valida, ingrese nuevo departamento")
+        if opcion_valida and departamento[numero-1][diccionario[letra]][0] != "X":
+            while True:
+                rut = input("ingrese su rut\n")
+                try:
+                    rut = int(rut)
+                    break
+                except:
+                    print("rut invalido, ingrese nuevamente\n")
+          
+            departamento[numero-1][diccionario[letra]][0] = "X"
+            departamento[numero-1][diccionario[letra]][2] = rut
+        else:
+            print("opcion no valida, ingrese nuevo departamento")
+            opcion_valida = False
+    print("Compra exitosa")
+    return departamento
+
+
+def iniciar():
+    departamento = []
+    for piso in range(0,10):
+        departamento.append([])
+    for piso in departamento:
+        # [comprado,valor]
+        piso.append([" ",3800,"00"])
+        piso.append([" ",3000,"00"])
+        piso.append([" ",2800,"00"])
+        piso.append([" ",3500,"00"])
+    salir = True
+    while salir:
+        print()
+        print("1. Comprar departamento")
+        print("2. Mostrar departamentos dsisponibles")
+        print("3. Ver listado de compradores")
+        print("4. Mostrar ganancias totales")
+        print("5. Salir")
+        opcion = input("ingrese su opcion \n")
+        if opcion == "1":
+            departamento = comprar(departamento)
+        elif opcion == "2":
+            mostrar_disponibles(departamento)
+        elif opcion == "3":
+            mostrar_compradores(departamento)
+        elif opcion == "4":
+            mostrar_ganacias(departamento)
+        elif opcion == "5":
+            print("Saliendo del sistema")
+            print("usuario:")
+            print("fecha:",datetime.now())
+            break
+        else:
+            print("ingrese opcion valida")
+
+
+    iniciar()
